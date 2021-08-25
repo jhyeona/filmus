@@ -1,0 +1,51 @@
+
+/* ======================== header =============================== */
+
+#header{
+    width: 998px;
+    height: 150px;
+    margin: 0 auto;
+    background-color: rgba(240, 230, 230, 0);
+    font-size: 20px;
+    font-family: 'Florencesans SC Exp';
+}
+#logoimg{
+    width: 200px;
+    margin: 0;
+}
+
+#headermenu{
+    float: right;
+    margin-top: 30px;
+}
+#headermenu>li{
+    display: inline;
+    padding-right: 20px;
+    margin-top: 30px;
+    
+}
+#headermenu>li:nth-child(4), #headermenu>li:nth-child(5){
+    padding: 0
+}
+ #searchimg {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+  }
+
+.search-field {
+    width: 200px;
+    border: none;
+    border-radius: 100px;
+    outline: none;
+    
+  }
+  
+  .search-button {
+    background: transparent;
+    border: none;
+    outline: none;
+    margin-left: -33px;
+    background-image: image(src="/resources/img/search.png");
+  }
+  
