@@ -2,9 +2,13 @@ package com.filmee.myapp.domain;
 
 import java.util.Date;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BoardCommentVO {
 	
 	private Integer bcno;
@@ -14,6 +18,6 @@ public class BoardCommentVO {
 	private Date insert_ts;
 	private Date update_ts;
 	private Integer like_cnt;
-	private Integer pbcno;
+	private Integer parent_bcno;
 
 }//end class

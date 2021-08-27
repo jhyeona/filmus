@@ -6,16 +6,124 @@
 
 
 <!DOCTYPE html>
-
+ 
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" href="/resources/css/bootstrap.css">
+    <%@ include file="/resources/html/header.jsp" %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js"></script>
+    <script src="/resources/js/reply.js"></script>
+
+    
     <script>
+    	$(function(){
+            console.log("========= COMMENT JS =======")
+    		var bnoValue='<c:out value="${board.bno}"/>';
+            var replyUL=$(".chat");            
+
+            showList(1);
+            function showList(page){
+                console.log("showList !")
+                replyService.getList({bno:bnoValue,page:page||1},function(list){
+                    if(page== -1){
+                        pageNum=Math.ceil(replyCnt/10.0);
+                        showList(pageNum);
+                        return;
+                    }
+                    var str="";
+                    if(list==null||list.length==0){
+                        return;
+                    }//if
+                    for(var i=0, len=list.length||0; i<len; i++){
+                        str+="<li class='left clearfix' data-bcno='"+list[i].bcno+"'>";
+                        str+="  <div><div class='header'><strong class='primary-font'>["+list[i].writer+"]</strong>";
+                        str+="      <samll class='pull-right text-muted' id='commentTs'>작성 "+replyService.displayTime(list[i].insert_ts)+" <c:if test='"+list[i].update_ts+"'><br>수정 "+replyService.displayTime(list[i].update_ts)+"</c:if>"+"</small></div>";
+                        str+="      <p>"+list[i].content+"</p></div></li><hr>";
+                    }
+                    replyUL.html(str);
+                })//end function
+            }//showList
+
+            var modal = $(".modal");
+
+            var modalInputReply=modal.find("input[name='content']");
+            var modalInputReplyer=modal.find("input[name='writer']");
+            var modalinputReplyDate=modal.find("input[name='insert_ts']");
+
+            var modalModBtn=$("#modalModBtn");
+            var modalRemoveBtn=$("#modalRemoveBtn");
+            var modalRegisterBtn=$("#modalRegisterBtn");
+
+            $("#addReplyBtn").on("click",function(e){
+                console.log("addReplyBtn")
+                modal.find("input").val("");
+                modalinputReplyDate.closest("div").hide();
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+                $(".modal").modal("show");
+            })//onclick addReplyBtn
+
+            modalRegisterBtn.on("click",function(e){
+                console.log("content, bno: "+modalInputReply, bnoValue);
+                reply={
+                    content:modalInputReply.val(),
+                    bno:bnoValue,
+                    writer:1
+                };
+                replyService.add(reply,function(result){
+                    alert(result);
+
+                    modal.find("input").val("");
+                    modal.modal("hide");
+                    showList(1);
+                })
+            })//modalRegisterBtn
+
+            $(".chat").on("click","li",function(e){
+                console.log(" >> chat clicked.");
+                bcno=$(this).data("bcno");
+                console.log("bcno:"+bcno);
+                console.log("content:"+modalInputReply);
+                replyService.get(bcno, function(reply){
+                    modalInputReply.val(reply.content);
+                    modalInputReplyer.val(reply.writer).attr("readonly","readonly");
+                    modalinputReplyDate.val(replyService.displayTime(reply.update_ts)).attr("readonly","readonly").hide();
+                    modal.data("bcno",reply.bcno);
+
+                    modal.find("button[id!='modalCloseBtn']");
+                    modalModBtn.show();
+                    $(".modal").modal("show");
+                })
+            })
+            modalModBtn.on("click",function(e){
+                console.log("modalModBtn Clicked");
+            	var reply={bcno:bcno, content: modalInputReply.val()};
+            	replyService.update(reply, function(result){
+            	    alert("수정되었습니다.");
+
+            		modal.modal("hide");
+            		showList(1);
+            	})
+            })
+
+			modalRemoveBtn.on("click",function(e){
+                console.log("removeBtn clicked >> bcno:" +bcno);
+				replyService.remove(bcno, function(result){
+                    alert("삭제 되었습니다.");
+					modal.modal("hide");
+					showList(1);
+				})
+			})
+    	})//jq
+
+        
+
         $(function(){
-            console.clear();
             console.debug('>>> jq started.');
 
             $("#listBtn").on('click',function(){
@@ -30,13 +138,22 @@
 
             $("#delete").on('click',function(){
                 console.log("delete clicked.");
-                alert("게시글을 삭제하시겠습니까?");
-                let formobj=$('form');
-                formobj.attr('action','/board/remove');
-                formobj.attr('method','post');
-                formobj.submit();
-            })
+                if(confirm("게시글을 삭제하시겠습니까?")){
+                    let formobj=$('form');
+                    formobj.attr('action','/board/remove');
+                    formobj.attr('method','post');
+                    formobj.submit();
+                } else{
+                	return false;
+                }//if-else
+            })//delete
+
+            // var operForm = $("#operForm");
+            // $("bottn[data-oper='modify']").on("click", function(e){
+            //     operForm.attr("action","/board/modify").submit();
+            // })
         })//js
+
     </script>
     <style>
         body,input,textarea,select,button,table{font-family:'Florencesans SC Exp';}
@@ -50,13 +167,14 @@
         a{color:#333;text-decoration:none;}
         a:hover,a:active,a:focus,a:visited{color:#333;text-decoration:none;}
 
-
-       
         body{
 		    width: 998px;
 		    margin: 0 auto;
 		    font-size: 20px;
             font-family: 'ELAND 초이스';
+		}
+		#commentTs{
+			float: right;
 		}
         #thiscategory{
             width: 90%;
@@ -86,17 +204,14 @@
             font-size: 20px;
             padding: 10px;
             margin-bottom: 20px;
-            border: 3px solid #eecede96; 
             background-color: #fcfcfc96; 
             border-radius: 30px;
-            text-align: center;
         }
         #content{
             width: 100%;
             height: 100%;
             font-size: 15px;
             padding: 20px;
-            border: 3px solid #eecede96; 
             background-color: #fcfcfc96; 
             border-radius: 30px;
         }
@@ -121,23 +236,50 @@
             cursor: pointer;
             transition: 0.5s;
         }
-        #listBtn{
+        #threeBtn{
             float: right;
         }
-        #listBtn, #modifyBtn, #delete{
-            background-color: #f3e5ec96;
-            padding: 3px;
-            margin-top: 20px;
-            width: 90px;
-            height: 40px;
-        }
+
         #emptyheart{
             width: 20px;
             height: 20px;
         }
+
+        table {
+			width:100%;
+		    text-align: center;
+		    margin: 20px ;
+		    font-size: 20px;
+            font-family: 'ELAND 초이스';
+  			border-collapse: collapse;
+		  }
+		 td{
+		  	color: black;
+		  	font-size:15px;
+		  	padding: 10px;
+  			border-bottom: 1px solid #ddd;	
+  		  }
+		  th{
+		  	font-weight: bold;
+		  	border:10px;
+		  	margin:10px;
+		  	padding:15px;
+  			border-bottom: 1px solid #ddd;
+  		  }
+        #commentList{
+            display: inline-block;
+            font-size: 16px;
+        }
+        #addReplyBtn{
+            display: inline-block;
+            float: right;
+            font-size: 16px;
+        }
     </style>
+
 </head>
 <body>
+    
     <div id="container">
 
         <div id="thiscategory">
@@ -152,12 +294,14 @@
             <input type="hidden" name="currPage" value="${cri.currPage}">
             <input type="hidden" name="amount" value="${cri.amount}">
             <input type="hidden" name="pagesPerPage" value="${cri.pagesPerPage}">
-
             <input type="hidden" name="bno" value="${board.bno}">
+            <input type="hidden" name="fname" value="${file.fname}">
+            <input type="hidden" name="writer" value="1"> <!-- ######## writer 값 바꿔주기 ######## -->
+
             <div>
                 <form action="/mypage">
                     <ul id="userinfo">
-                        <li><a href="/mypage"><img src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a></li>
+                        <li><a href="/mypage"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a></li>
                         <li><a href="/mypage">usernickName</a></li>
                     </ul>
                     <ul id="getinfo">
@@ -179,22 +323,95 @@
 
             <div>
                 <p id="title">
-                    ${board.title}
+                    [<c:choose>
+                       <c:when test="${board.category=='F'}">자유</c:when>
+                       <c:when test="${board.category=='N'}">소식</c:when>
+                       <c:when test="${board.category=='B'}">자랑</c:when>
+                       <c:when test="${board.category=='R'}">추천</c:when>
+                     </c:choose>] ${board.title}
                 </p>
             </div>
-
-
+			<hr>
             <div id="content">
             	<p>
 	               &nbsp;${board.content}
             	</p>
             </div>
+            <hr>
+            <div id="threeBtn">
+                <button type="button" id="modifyBtn" class="btn btn-outline-dark">수정</button>
+                <button type="button" id="delete" class="btn btn-outline-dark">삭제</button>
+                <button type="button" id="listBtn" class="btn btn-outline-dark">목록</button>
+            </div>
 
- 
-            <button type="button" id="modifyBtn">수정</button>
-            <button type="button" id="delete">삭제</button>
-            <button type="button" id="listBtn">목록</button>
-        </form>
+            <div>
+            	<c:if test="${file.fname!=null}">
+	            	<p>&nbsp</p>
+	            	<p>첨부파일</p>
+		            <p><a class="btn btn-primary" href="/board/downloadFile/${board.bno}">${file.fname}</a></p>
+	            </c:if>
+            </div>
+
+            <br>
+     		<hr>
+             <div class='row'>
+                <div class='col-lg-12'>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i>댓글 목록
+                            <button type="button" id="addReplyBtn" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">새 댓글 쓰기</button>
+                            <hr>
+                            <!-- Modal -->
+                        </div>
+                        <div class="panel-body">
+                            <ul class="chat">
+                                <li class="left clearfix" data-bcno='89' >
+                                    <div>
+                                        <div class="header">
+                                            <strong class="primary-font"></strong>
+                                            <small class="pull-right text-muted"></small>
+                                        </div>
+                                        <p></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">댓글 작성</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="content">내용</label>
+                            <input class="form-control" name='content' value='content'>
+                        </div>      
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name='writer' value=1>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name='insert_ts' value='2018-01-01 13:13'>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button id='modalModBtn' type="button" class="btn btn-warning">Modify</button>
+                      <button id='modalRemoveBtn' type="button" class="btn btn-danger">Remove</button>
+                      <button id='modalRegisterBtn' type="button" class="btn btn-primary" data-bs-dismiss="modal">작성완료</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+		</form>
     </div>
 </body>
 </html>

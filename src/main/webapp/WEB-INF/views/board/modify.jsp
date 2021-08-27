@@ -17,14 +17,15 @@
     <script>
         $(function(){
             console.log("jq started");
-            $("#listBtn").click(function(){
+            $("#listBtn").on('click',function(){
             	console.log(this)
                 console.log("listBtn Clicked");
-
-                alert("작성 중이던 글이 있습니다. 정말 취소하시겠습니까?");
-                location.href="/board/list?category=&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
-            })
-
+				if(confirm("작성 중이던 글이 있습니다. 정말 취소하시겠습니까?"){
+	                location.href="/board/list?category=&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"					
+				} else{
+					false;
+				}	
+            })	
         })
     </script>
     <style>
@@ -55,6 +56,23 @@
         table{
         	font-family: 'ELAND 초이스';
         }
+            select {
+            width: 250px;
+    		float: left;
+            font-size: 16px;
+            font-weight: 400 bold;
+            font-family: 'ELAND 초이스';
+            line-height: 1;
+
+            color: #444;
+            background-color: #fff;
+
+            padding: 0.3em 0.4em;
+
+            border: 1px solid rgb(255, 255, 255);
+            border-radius: 0.5em;
+            box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+        }
     </style>
 </head>
 <body>
@@ -78,6 +96,7 @@
 							<td><input type="text" class="form-control" name="bno" value="${board.bno}" readonly></td>
 						</tr>
                         <tr>
+                        	<td><label for="category">카테고리</label></td>
                             <td>
                                 <select name="category" id="category">
                                     <option value="F" selected>자유</option>
@@ -94,12 +113,13 @@
 						</tr>
                         <tr>
                             <td><label for="content">내용</label></td>
-                            <td><input type="text"  class="form-control" name="content" value="${board.content}"  maxlength="2048" style="height: 350px"></td>
+                            <td><textarea class="form-control" name="content"  maxlength="2048" style="height: 350px">${board.content}</textarea></td>
                         </tr>
                         <tr>
                             <td><label for="writer">작성자</label></td>
                             <td><input type="text"  class="form-control" name="writer" value="${board.writer}" readonly></td>
                         </tr>
+
 					</tbody>
 				</table>
                 <button type="submit" class="btn btn-primary pull-right" onclick="goWrite(this.form)">완료</button>

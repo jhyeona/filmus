@@ -13,14 +13,14 @@
             SELECT ISEQ$$_101443.nextval FROM dual
         </selectKey>
         <![CDATA[ 
-            INSERT INTO fm_board_comment(bno,writer,content, parent_bcno)
-            VALUES (#{bno}, #{writer}, #{content}, #{pbcno, jdbcType=VARCHAR})
+            INSERT INTO fm_board_comment(bno,writer,content)
+            VALUES (#{bno}, #{writer}, #{content})
         ]]>
     </insert>
 
-    <select id="read" resultType="com.filmee.myapp.domain.BoardCommentVO">
+    <select id="list" resultType="com.filmee.myapp.domain.BoardCommentVO">
         <![CDATA[ 
-            SELECT /*+index_desc(fm_board)*/*
+            SELECT /*+index_desc(fm_board_comment)*/*
             FROM fm_board_comment
             WHERE bno=#{bno}
         ]]>
@@ -37,9 +37,33 @@
         <![CDATA[ 
             UPDATE fm_board_comment 
             SET content=#{content},
-            update_ts=sysdate
+            update_ts=current_date
             WHERE bcno=#{bcno}
         ]]>
     </update>
+
+    <select id="cocnt" resultType="int">
+        <![CDATA[ 
+            SELECT COUNT(*)
+            FROM fm_board_comment
+            WHERE bno=#{bno}
+        ]]>
+    </select>
+
+    <select id="read" resultType="com.filmee.myapp.domain.BoardCommentVO">
+        <![CDATA[ 
+            SELECT *
+            FROM fm_board_comment
+            WHERE bcno=#{bcno}
+        ]]>
+    </select>
+
+    <select id="getListWithPaging" resultType="com.filmee.myapp.domain.BoardCommentVO">
+        <![CDATA[ 
+            SELECT /*+index_desc(fm_board_comment)*/*
+            FROM fm_board_comment
+            WHERE bno=#{bno}
+        ]]>
+    </select>
 
 </mapper>

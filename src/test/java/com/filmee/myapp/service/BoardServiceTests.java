@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
+import com.filmee.myapp.domain.FileVO;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -70,7 +71,7 @@ public class BoardServiceTests {
 		
 		BoardVO board = new BoardVO(				
 				null, 
-				null, 
+				"F", 
 				1, 
 				"테스트클래스", 
 				"테스트 성공",
@@ -89,7 +90,7 @@ public class BoardServiceTests {
 	public void testModify() {
 		log.debug("testModify() invoked.");
 		BoardVO board = new BoardVO(				
-				20, 
+				300, 
 				null, 
 				1, 
 				"수정했습니다.", 
@@ -113,5 +114,12 @@ public class BoardServiceTests {
 		}//if
 	}//testRemove
 
+	@Test
+	public void testFileFind() {
+		log.debug("testFileFind() invoked."); 
+		
+		FileVO list = this.service.fileDetail(332);
+		log.info("list:{}",list);
+	}//testFileFind
 
 }//end class

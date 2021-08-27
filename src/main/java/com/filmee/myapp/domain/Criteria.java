@@ -3,9 +3,11 @@ package com.filmee.myapp.domain;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@NoArgsConstructor
 @Data
 public class Criteria {
 	
@@ -20,6 +22,7 @@ public class Criteria {
  	
  	//CategorySelect
  	private String category;//카테고리선택
+
  	
  	public String getPagingUri() {
  		log.debug("getPagingUri() invoked.");

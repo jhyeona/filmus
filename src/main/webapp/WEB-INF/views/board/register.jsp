@@ -37,7 +37,7 @@
             form.action = "register";
             form.submit();
             
-        }
+        }//fn_addtoBoard
 
     </script>
 
@@ -123,13 +123,11 @@
 							<td><textarea class="form-control" placeholder="글 내용" name="content" maxlength="2048" style="height: 350px;"></textarea></td>
 						</tr>
                         <tr>
-                              <td><input type="file" class="form-control" name="files"></td>
+                              <td><input type="file" class="form-control" name="files" multiple></td>
                         </tr>
 					</tbody>
 				</table>
                 <button type="submit" id="submitBtn" onclick="fn_addtoBoard()" class="btn btn-primary pull-right">완료</button>
-                <!-- <a href="#" onclick="fn_addtoBoard()">완료</a> -->
-                <!-- <button type="submit" id="submitBtn" class="btn btn-primary pull-right">완료</button>-->
                 <button type="button" id="listBtn"  class="btn btn-primary pull-right" >취소</button>
 			</form>
 		</div>

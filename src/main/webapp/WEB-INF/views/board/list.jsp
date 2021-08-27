@@ -10,6 +10,8 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <%@ include file="/resources/html/header.jsp" %>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js"></script>
 
@@ -198,6 +200,8 @@
                     <input type="hidden" name="type">
                     <input type="hidden" name="keyword">
                     <input type="hidden" name="category">
+                    <input type="hidden" name="bno" value="${board.bno}">
+                    <hr>
                     <ul>
                         <li><a href="/board/list?&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">ALL</a></li>
                         <li><a href="/board/list?category=F&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">FREE</a></li>
@@ -205,6 +209,8 @@
                         <li><a href="/board/list?category=B&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">BOASTFULNESS</a></li>
                         <li><a href="/board/list?category=R&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">RECOMMENDATION</a></li>
                     </ul>
+                    <hr>
+                    
                 </form>
             </div>
             <div id="boardSearch">
@@ -232,7 +238,7 @@
             <thead>
                 <tr>
                     <th>카테고리</th>
-                    <th>번호</th>
+                    <th>글번호</th>
                     <th>작성자</th>
                     <th>제목</th>
                     <th>등록일</th>

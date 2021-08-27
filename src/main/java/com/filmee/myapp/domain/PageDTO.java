@@ -1,5 +1,7 @@
 package com.filmee.myapp.domain;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -16,9 +18,18 @@ public class PageDTO {
 	private boolean prev; 	//이전 페이지로 갈 수 있는지 여부
 	private boolean next; 	//다음 페이지로 갈 수 있는지 여부
 	
+	private int replyCnt;
+	private List<BoardCommentVO> list;
+	
+	public PageDTO(int replyCnt, List<BoardCommentVO> list) {
+		this.replyCnt=replyCnt;
+		this.list=list;
+	}
+	
 	public PageDTO(Criteria cri, int totalAmount) {
 		this.cri=cri;
-		this.totalAmount=totalAmount;
+		this.totalAmount=totalAmount; 
+		
 		
 		//----------------------------------------------------------//
 		//--Step.1 : 페이징 처리를 위한 공통변수 생성하기

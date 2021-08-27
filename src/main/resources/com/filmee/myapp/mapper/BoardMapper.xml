@@ -70,7 +70,7 @@
     <update id="update">
       <![CDATA[ 
         UPDATE fm_board
-        SET title=#{title}, category=#{category}, CONTENT=#{content}, update_ts=sysdate
+        SET title=#{title}, category=#{category}, CONTENT=#{content}, update_ts=current_date
         WHERE bno=#{bno}
       ]]>
     </update>

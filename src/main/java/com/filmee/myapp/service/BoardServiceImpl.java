@@ -6,9 +6,11 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.filmee.myapp.domain.BoardCommentVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.FileVO;
+import com.filmee.myapp.mapper.BoardCommentMapper;
 import com.filmee.myapp.mapper.BoardMapper;
 import com.filmee.myapp.mapper.FileMapper;
 
@@ -24,6 +26,8 @@ public class BoardServiceImpl
 	
 	@Autowired private BoardMapper mapper;
 	@Autowired private FileMapper fmapper;
+	@Autowired private BoardCommentMapper cmapper;
+
 
 	@Override
 	public List<BoardVO> getList(Criteria cri) {
@@ -84,5 +88,15 @@ public class BoardServiceImpl
 		int affectedLines = this.fmapper.insert(file);
 		return affectedLines;
 	}
+
+	@Override
+	public FileVO fileDetail(Integer bno) {
+		log.debug("fileDetail({}) invoked.", bno);
+		Objects.requireNonNull(this.fmapper);
+		
+		FileVO list = this.fmapper.find(bno);
+		
+		return list;
+	}//fileDetail
 
 }//end class
