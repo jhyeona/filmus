@@ -100,7 +100,7 @@
                     $(".modal").modal("show");
                 })
             })
-            modalModBtn.on("click",function(e){
+            x.on("click",function(e){
                 console.log("modalModBtn Clicked");
             	var reply={bcno:bcno, content: modalInputReply.val()};
             	replyService.update(reply, function(result){
@@ -401,9 +401,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button id='modalModBtn' type="button" class="btn btn-warning">Modify</button>
-                      <button id='modalRemoveBtn' type="button" class="btn btn-danger">Remove</button>
+                      <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                      <button id='modalModBtn' type="button" class="btn btn-warning">수정</button>
+                      <button id='modalRemoveBtn' type="button" class="btn btn-danger">삭제</button>
                       <button id='modalRegisterBtn' type="button" class="btn btn-primary" data-bs-dismiss="modal">작성완료</button>
                     </div>
                   </div>

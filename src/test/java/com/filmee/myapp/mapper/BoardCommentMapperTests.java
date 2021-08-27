@@ -95,7 +95,7 @@ public class BoardCommentMapperTests {
 	@Test
 	public void testGetListWithPaging() {
 		log.debug("testGetListWithPaging() invoked.");
-		Criteria cri = new Criteria(1,10,5);
+		Criteria cri = new Criteria();
 		List<BoardCommentVO> list = this.mapper.getListWithPaging(cri, 171);
 		
 		list.forEach(log::info);
