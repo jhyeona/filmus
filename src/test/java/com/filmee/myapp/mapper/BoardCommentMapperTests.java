@@ -79,13 +79,6 @@ public class BoardCommentMapperTests {
 	}//testUpdate
 
 	@Test
-	public void testCocnt() {
-		log.debug("testCocnt() invoked.");
-		
-		this.mapper.cocnt(171);
-	}//testCocnt
-	
-	@Test
 	public void testRead() {
 		log.debug("testRead() invoked.");
 		

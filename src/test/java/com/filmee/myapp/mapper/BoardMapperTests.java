@@ -39,7 +39,7 @@ public class BoardMapperTests {
 		Criteria cri = new Criteria();
 		List<BoardVO> board = this.mapper.getList(cri);
 		board.forEach(log::info);
-	}//testGetList
+	}//testGetList 
 	
 	@Test
 	public void testSelect() {
@@ -55,7 +55,7 @@ public class BoardMapperTests {
 		
 		BoardVO vo = new BoardVO(
 				null, 
-				null, 
+				"F", 
 				1, 
 				"테스트클래스", 
 				"테스트 성공",
@@ -63,6 +63,7 @@ public class BoardMapperTests {
 				null, 
 				null, 
 				null, 
+				null,
 				null
 				
 				);
@@ -77,7 +78,7 @@ public class BoardMapperTests {
 
 		BoardVO vo = new BoardVO(
 				14, 
-				null, 
+				"F", 
 				1, 
 				"업데이트 테스트", 
 				"테스트 성공",
@@ -85,6 +86,7 @@ public class BoardMapperTests {
 				null, 
 				null, 
 				null, 
+				null,
 				null
 				
 				);

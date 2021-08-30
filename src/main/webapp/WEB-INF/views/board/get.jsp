@@ -21,6 +21,50 @@
 
     
     <script>
+   
+    </script>
+    <script>
+    $(function(){
+
+        $("#emptyheart").on("click",function(e){
+            console.log(" >> emptyheart clicked.");
+
+            console.debug("like_function")
+            var boardno = '<c:out value="${board.bno}"/>'
+            var mno = 1
+            console.log("boardno, mno : " + boardno +","+ mno);
+           
+            $.ajax({
+                url: "/board/like",
+                type: "GET",
+                dataType: "json",
+                data: {"bno":372,"mno":1},
+                success: function(data) {
+                    console.log("Data:::::")
+                    console.log(data);
+                    var msg = '';
+                    var like_img = '';
+                    
+                    msg += data.msg;
+                    alert(msg);
+                    
+                    if(data.like_check == 0){
+                        like_img = "/resources/img/emptyheart.png";
+                    } else {
+                        like_img = "/resources/img/fullheart.png";
+                    }      
+                    // $('#like_img', frm_read).attr('src', like_img);
+                    $('#like_cnt').html(data.like_cnt);
+                    $('#like_check').html(data.like_check);
+                },
+                error: function(request, status, error){
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        })
+       
+    })
+    
     	$(function(){
             console.log("========= COMMENT JS =======")
     		var bnoValue='<c:out value="${board.bno}"/>';
@@ -100,7 +144,7 @@
                     $(".modal").modal("show");
                 })
             })
-            x.on("click",function(e){
+            modalModBtn.on("click",function(e){
                 console.log("modalModBtn Clicked");
             	var reply={bcno:bcno, content: modalInputReply.val()};
             	replyService.update(reply, function(result){
@@ -147,14 +191,11 @@
                 	return false;
                 }//if-else
             })//delete
-
-            // var operForm = $("#operForm");
-            // $("bottn[data-oper='modify']").on("click", function(e){
-            //     operForm.attr("action","/board/modify").submit();
-            // })
+            
         })//js
 
     </script>
+
     <style>
         body,input,textarea,select,button,table{font-family:'Florencesans SC Exp';}
         body,div,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,p,form,fieldset,input,table,tr,th,td{margin:0;padding:0;}
@@ -301,7 +342,9 @@
             <div>
                 <form action="/mypage">
                     <ul id="userinfo">
-                        <li><a href="/mypage"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a></li>
+                        <li>
+                            <a href="/mypage"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a>
+                        </li>
                         <li><a href="/mypage">usernickName</a></li>
                     </ul>
                     <ul id="getinfo">
@@ -312,14 +355,27 @@
                     </ul>
                 </form>
             </div>
+            
             <div id="count">
                 <ul>
                     <li><button type="button">신고</li>
-                    <li><button type="button"><img id="emptyheart" src="/resources/img/emptyheart.png">${board.like_cnt}</li>
+                    <!-- <li><button type="button"><img id="emptyheart" src="/resources/img/emptyheart.png">${board.like_cnt}</li> -->
                     <li>조회수 ${board.view_cnt}</li>
                 </ul>
             </div>
 
+            <input type="hidden" id='bno' name="bno" value=''>
+            <input type="hidden" id='user_id' name="user_id" value='1'>
+            <!--  좋아요  -->
+            <div class="div1">
+                <div class="div2">
+                    <div class="div3">
+                            <a href="#" onclick="like_func();"><img id="emptyheart" src='/resources/img/emptyheart.png' id='like_img'></a>
+                        <br><span id='like_cnt' style='margin-left: 5px;'></span> Likes
+                    </div>
+                </div>
+                
+            </div>
 
             <div>
                 <p id="title">
@@ -414,4 +470,5 @@
 		</form>
     </div>
 </body>
+
 </html>

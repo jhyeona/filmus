@@ -1,5 +1,6 @@
 package com.filmee.myapp.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,7 +80,7 @@ public class BoardServiceTests {
 				null, 
 				null, 
 				null, 
-				null);
+				null,null);
 		if(this.service.register(board)) {
 			log.info("board:{}",board);
 		}//if
@@ -91,7 +92,7 @@ public class BoardServiceTests {
 		log.debug("testModify() invoked.");
 		BoardVO board = new BoardVO(				
 				300, 
-				null, 
+				"F", 
 				1, 
 				"수정했습니다.", 
 				"modify test success.",
@@ -99,7 +100,7 @@ public class BoardServiceTests {
 				null, 
 				null, 
 				null, 
-				null);
+				null,null);
 		if(this.service.modify(board)) {
 			log.info("board:{}",board);
 		}//if
@@ -121,5 +122,7 @@ public class BoardServiceTests {
 		FileVO list = this.service.fileDetail(332);
 		log.info("list:{}",list);
 	}//testFileFind
+	
 
+	
 }//end class

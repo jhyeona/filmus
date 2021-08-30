@@ -24,7 +24,7 @@ public class Criteria {
  	private String category;//카테고리선택
 
  	
- 	public String getPagingUri() {
+ 	public String getPagingUri() { 
  		log.debug("getPagingUri() invoked.");
  		
  		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("");

@@ -117,11 +117,59 @@
       SET view_cnt = view_cnt+1
       where bno=#{bno}
     </update>
-        
-    <update id="likeCnt" parameterType="int">
+
+    <update id="commentCnt" parameterType="int">
       UPDATE fm_board 
-      SET like_cnt = like_cnt+1
-      where bno=#{bno}
+      SET comment_cnt = comment_cnt + #{amount}
+      WHERE bno=#{bno}
     </update>
 
+
+    <insert id="insertLike" parameterType="HashMap">
+      <![CDATA[ 
+        INSERT INTO liketo(bno,user_id)
+        VALUES (#{bno}, #{user_id})
+      ]]>
+    </insert>
+
+    <select id="likecount" resultType="HashMap">
+      <![CDATA[ 
+      SELECT COUNT(*)
+      FROM liketo
+      WHERE bno=${bno}
+      ]]>
+    </select>
+
+    <update id="like_check" parameterType="HashMap">
+      <![CDATA[ 
+        UPDATE liketo
+        SET like_check = like_check+1
+        WHERE user_id=#{user_id}
+        AND bno=#{bno}
+      ]]>
+    </update>
+
+    <update id="like_check_cancel" parameterType="HashMap">
+      <![CDATA[ 
+        UPDATE liketo
+        SET like_check = 0
+        WHERE user_id=#{user_id}
+        AND bno=#{bno}
+      ]]>
+    </update>
+
+    <delete id="deletebyBno" parameterType="int">
+      <![CDATA[ 
+        DELETE FROM liketo
+        WHERE bno=#{bno}
+      ]]>
+    </delete>
+            
+    <select id="read" resultType="com.filmee.myapp.domain.LiketoVO" parameterType="HashMap">
+      select *
+      from liketo
+      where bno=#{bno}
+      and user_id=#{user_id}
+    </select>
+    
 </mapper>

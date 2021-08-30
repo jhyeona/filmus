@@ -259,7 +259,7 @@
                         </td>
                         <td>${board.bno}</td>
                         <td>${board.writer}</td>
-                        <td><a href="/board/get?bno=${board.bno}&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">${board.title}</a>[댓글수]</td>
+                        <td><a href="/board/get?bno=${board.bno}&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">${board.title} </a> [<c:out value="${board.commentCnt}"/>]</td>
                         <td><fmt:formatDate pattern="yyyy/MM/dd" value="${board.insert_ts}"/></td>
                         <td>${board.like_cnt}</td>
                         <td>${board.view_cnt}</td>

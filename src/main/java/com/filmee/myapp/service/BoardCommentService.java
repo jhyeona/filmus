@@ -20,5 +20,5 @@ public interface BoardCommentService {
 	
 	public abstract List<BoardCommentVO> getList(Criteria cri, Integer bno);
 	
-	public abstract int getCountByBno(Integer bno); 	//댓글 수 
+
 }//end interface

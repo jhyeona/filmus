@@ -19,5 +19,7 @@ public class BoardVO {
 	private Date delete_ts;
 	private Integer view_cnt;
 	private Integer like_cnt;
-
+	
+	private Integer commentCnt;
+	
 }

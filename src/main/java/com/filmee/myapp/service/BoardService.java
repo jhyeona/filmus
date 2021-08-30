@@ -1,11 +1,12 @@
 package com.filmee.myapp.service;
 
+import java.util.HashMap;
 import java.util.List;
 
-import com.filmee.myapp.domain.BoardCommentVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.FileVO;
+import com.filmee.myapp.domain.LiketoVO;
 
 public interface BoardService {
 	//전체리스트, 한개 상세조회, 작성, 수정, 삭제
@@ -25,5 +26,7 @@ public interface BoardService {
 	public abstract int fileInsert(FileVO file);	//파일업로드
 	
 	public abstract FileVO fileDetail(Integer bno);	//파일다운로드
-			
+
+
+	
 }//end interface

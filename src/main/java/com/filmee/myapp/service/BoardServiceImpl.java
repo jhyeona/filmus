@@ -1,16 +1,16 @@
 package com.filmee.myapp.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.filmee.myapp.domain.BoardCommentVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.FileVO;
-import com.filmee.myapp.mapper.BoardCommentMapper;
+import com.filmee.myapp.domain.LiketoVO;
 import com.filmee.myapp.mapper.BoardMapper;
 import com.filmee.myapp.mapper.FileMapper;
 
@@ -26,7 +26,6 @@ public class BoardServiceImpl
 	
 	@Autowired private BoardMapper mapper;
 	@Autowired private FileMapper fmapper;
-	@Autowired private BoardCommentMapper cmapper;
 
 
 	@Override
@@ -53,7 +52,7 @@ public class BoardServiceImpl
 		Objects.requireNonNull(fmapper);
 		
 		return (this.mapper.insertSelectKey(board)==1);
-	}
+	}//register
 
 	@Override
 	public boolean modify(BoardVO board) {
@@ -61,7 +60,7 @@ public class BoardServiceImpl
 		Objects.requireNonNull(this.mapper);
 
 		return (this.mapper.update(board)==1);
-	}
+	}//modify
 
 	@Override
 	public boolean remove(Integer bno) {
@@ -69,8 +68,8 @@ public class BoardServiceImpl
 		Objects.requireNonNull(this.mapper);
 
 		return (this.mapper.delete(bno)==1);
-	}
-
+	}//remove
+ 
 	@Override
 	public int getTotal(Criteria cri) {
 		log.debug("getTotal({}) invoked.",cri);
@@ -78,7 +77,7 @@ public class BoardServiceImpl
 		Objects.requireNonNull(cri);
 		
 		return this.mapper.getTotalCount(cri);
-	}
+	}//getTotal
 
 	@Override
 	public int fileInsert(FileVO file) {
@@ -87,7 +86,7 @@ public class BoardServiceImpl
 		
 		int affectedLines = this.fmapper.insert(file);
 		return affectedLines;
-	}
+	}//fileInsert
 
 	@Override
 	public FileVO fileDetail(Integer bno) {
@@ -98,5 +97,7 @@ public class BoardServiceImpl
 		
 		return list;
 	}//fileDetail
+
+	
 
 }//end class

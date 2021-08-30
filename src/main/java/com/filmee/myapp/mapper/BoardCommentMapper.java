@@ -18,9 +18,7 @@ public interface BoardCommentMapper {
 	public abstract int delete(Integer bcno);			//댓글 삭제
 	
 	public abstract int update(BoardCommentVO comment);	//댓글 수정
-	
-	public abstract int cocnt(Integer bno);				//댓글 개수
-	
+		
 	public abstract List<BoardCommentVO> getListWithPaging(@Param("cri")Criteria cri, @Param("bno") Integer bno);
-	
+		
 }//end interface 
