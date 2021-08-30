@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class PageDTO {
+public class BoardPageDTO {
 	//for pagination
 	private Criteria cri;
 	private int totalAmount;	//전체 게시물 수
@@ -21,12 +21,12 @@ public class PageDTO {
 	private int replyCnt;
 	private List<BoardCommentVO> list;
 	
-	public PageDTO(int replyCnt, List<BoardCommentVO> list) {
+	public BoardPageDTO(int replyCnt, List<BoardCommentVO> list) {
 		this.replyCnt=replyCnt;
 		this.list=list;
 	}
 	
-	public PageDTO(Criteria cri, int totalAmount) {
+	public BoardPageDTO(Criteria cri, int totalAmount) {
 		this.cri=cri;
 		this.totalAmount=totalAmount; 
 		

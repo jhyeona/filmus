@@ -38,7 +38,7 @@
                 url: "/board/like",
                 type: "GET",
                 dataType: "json",
-                data: {"bno":372,"mno":1},
+                data: {"bno":boardno,"mno":mno},
                 success: function(data) {
                     console.log("Data:::::")
                     console.log(data);

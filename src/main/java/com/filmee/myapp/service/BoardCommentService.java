@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.filmee.myapp.domain.BoardCommentVO;
 import com.filmee.myapp.domain.Criteria;
-import com.filmee.myapp.domain.PageDTO;
+import com.filmee.myapp.domain.BoardPageDTO;
 
 public interface BoardCommentService {
 	
