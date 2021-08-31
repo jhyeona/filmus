@@ -57,18 +57,19 @@ var replyService = (
         }//remove
 
         function update(reply, callback, error){
-            console.log("bcno:"+reply.bcno);
+            console.log("add(reply, callback) invoked.");
+            console.log("**bcno:"+reply.bcno+"/content:"+reply.content);
             $.ajax({
                 type:'put',
                 url:'/board/replies/'+reply.bcno,
                 data:JSON.stringify(reply),
                 contentType:"application/json; charset=utf-8",
-                success:function(result,status, er){
-                    if(error){
+                success: function(result,status, xhr){
+                    if(callback){
                         callback(result);
-                    }//if
-                },//success
-                error: function(xhr, status, er){
+                    }
+                },
+                error: function(xhr,status,er){
                     if(error){
                         error(er);
                     }//if

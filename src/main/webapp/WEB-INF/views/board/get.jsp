@@ -24,50 +24,12 @@
    
     </script>
     <script>
-    $(function(){
 
-        $("#emptyheart").on("click",function(e){
-            console.log(" >> emptyheart clicked.");
-
-            console.debug("like_function")
-            var boardno = '<c:out value="${board.bno}"/>'
-            var mno = 1
-            console.log("boardno, mno : " + boardno +","+ mno);
-           
-            $.ajax({
-                url: "/board/like",
-                type: "GET",
-                dataType: "json",
-                data: {"bno":boardno,"mno":mno},
-                success: function(data) {
-                    console.log("Data:::::")
-                    console.log(data);
-                    var msg = '';
-                    var like_img = '';
-                    
-                    msg += data.msg;
-                    alert(msg);
-                    
-                    if(data.like_check == 0){
-                        like_img = "/resources/img/emptyheart.png";
-                    } else {
-                        like_img = "/resources/img/fullheart.png";
-                    }      
-                    // $('#like_img', frm_read).attr('src', like_img);
-                    $('#like_cnt').html(data.like_cnt);
-                    $('#like_check').html(data.like_check);
-                },
-                error: function(request, status, error){
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                }
-            });
-        })
-       
-    })
     
     	$(function(){
             console.log("========= COMMENT JS =======")
     		var bnoValue='<c:out value="${board.bno}"/>';
+            var nickname='<c:out value="${board.nickname}"/>'
             var replyUL=$(".chat");            
 
             showList(1);
@@ -85,7 +47,7 @@
                     }//if
                     for(var i=0, len=list.length||0; i<len; i++){
                         str+="<li class='left clearfix' data-bcno='"+list[i].bcno+"'>";
-                        str+="  <div><div class='header'><strong class='primary-font'>["+list[i].writer+"]</strong>";
+                        str+="  <div><div class='header'><strong class='primary-font'>["+list[i].nickname+"]</strong>";
                         str+="      <samll class='pull-right text-muted' id='commentTs'>작성 "+replyService.displayTime(list[i].insert_ts)+" <c:if test='"+list[i].update_ts+"'><br>수정 "+replyService.displayTime(list[i].update_ts)+"</c:if>"+"</small></div>";
                         str+="      <p>"+list[i].content+"</p></div></li><hr>";
                     }
@@ -96,7 +58,7 @@
             var modal = $(".modal");
 
             var modalInputReply=modal.find("input[name='content']");
-            var modalInputReplyer=modal.find("input[name='writer']");
+            var modalInputReplyer=modal.find("input[name='nickname']");
             var modalinputReplyDate=modal.find("input[name='insert_ts']");
 
             var modalModBtn=$("#modalModBtn");
@@ -113,8 +75,7 @@
             })//onclick addReplyBtn
 
             modalRegisterBtn.on("click",function(e){
-                console.log("content, bno: "+modalInputReply, bnoValue);
-                reply={
+                var reply={
                     content:modalInputReply.val(),
                     bno:bnoValue,
                     writer:1
@@ -131,28 +92,35 @@
             $(".chat").on("click","li",function(e){
                 console.log(" >> chat clicked.");
                 bcno=$(this).data("bcno");
-                console.log("bcno:"+bcno);
-                console.log("content:"+modalInputReply);
+                console.log(".chat bcno:"+bcno);
+               
                 replyService.get(bcno, function(reply){
+                    console.log(reply);
                     modalInputReply.val(reply.content);
-                    modalInputReplyer.val(reply.writer).attr("readonly","readonly");
+                    modalInputReplyer.val(reply.nickname).attr("readonly","readonly");
                     modalinputReplyDate.val(replyService.displayTime(reply.update_ts)).attr("readonly","readonly").hide();
                     modal.data("bcno",reply.bcno);
 
                     modal.find("button[id!='modalCloseBtn']");
                     modalModBtn.show();
+                    modalRegisterBtn.hide();
                     $(".modal").modal("show");
                 })
             })
+
+
             modalModBtn.on("click",function(e){
                 console.log("modalModBtn Clicked");
-            	var reply={bcno:bcno, content: modalInputReply.val()};
-            	replyService.update(reply, function(result){
-            	    alert("수정되었습니다.");
-
-            		modal.modal("hide");
-            		showList(1);
-            	})
+            	var reply2={
+                    bcno:bcno, 
+                    content: modalInputReply.val()
+                };
+                console.log("reply2:"+reply2.bcno+ reply2.content)
+				replyService.update(reply2, function(result){
+                    alert("수정 되었습니다.");
+					modal.modal("hide");
+					showList(1);
+				})
             })
 
 			modalRemoveBtn.on("click",function(e){
@@ -205,7 +173,7 @@
         address{font-style:normal;}
         p,li,dd{font-size:1em; line-height:1.5em; text-align:justify;}
         /* a-style */
-        a{color:#333;text-decoration:none;}
+        a{color:#333;text-decoration:none;text-align: center;}
         a:hover,a:active,a:focus,a:visited{color:#333;text-decoration:none;}
 
         body{
@@ -337,15 +305,15 @@
             <input type="hidden" name="pagesPerPage" value="${cri.pagesPerPage}">
             <input type="hidden" name="bno" value="${board.bno}">
             <input type="hidden" name="fname" value="${file.fname}">
-            <input type="hidden" name="writer" value="1"> <!-- ######## writer 값 바꿔주기 ######## -->
+            <input type="hidden" name="writer" value="${board.writer}">
 
             <div>
-                <form action="/mypage">
+                <form action="/mypage/main">
                     <ul id="userinfo">
                         <li>
-                            <a href="/mypage"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a>
+                            <a href="/mypage/main"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a>
                         </li>
-                        <li><a href="/mypage">usernickName</a></li>
+                        <li><a href="/mypage/main">${board.nickname}</a></li>
                     </ul>
                     <ul id="getinfo">
                         <li>작성일 <fmt:formatDate pattern="yyyy/MM/dd" value="${board.insert_ts}"/></li>
@@ -450,7 +418,7 @@
                             <input class="form-control" name='content' value='content'>
                         </div>      
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name='writer' value=1>
+                            <input type="hidden" class="form-control" name='writer'>
                         </div>
                         <div class="form-group">
                             <input class="form-control" name='insert_ts' value='2018-01-01 13:13'>

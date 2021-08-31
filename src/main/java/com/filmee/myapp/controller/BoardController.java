@@ -6,18 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,19 +29,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.filmee.myapp.domain.BoardCommentUserVO;
 import com.filmee.myapp.domain.BoardCommentVO;
+import com.filmee.myapp.domain.BoardPageDTO;
+import com.filmee.myapp.domain.BoardUserVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.FileVO;
-import com.filmee.myapp.domain.LiketoVO;
-import com.filmee.myapp.domain.BoardPageDTO;
 import com.filmee.myapp.service.BoardCommentService;
 import com.filmee.myapp.service.BoardService;
-import com.google.gson.JsonObject;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -86,14 +81,14 @@ public class BoardController {
 		log.debug("get({},{},{},{},{})invoked.",cri,bno,fileVO,model);
 		Objects.requireNonNull(service);
 		
-		BoardVO board = this.service.get(bno);
+		BoardUserVO board = this.service.get(bno);
 		fileVO = this.service.fileDetail(bno);
-		List<BoardCommentVO> vo = this.cService.list(bno);
+		List<BoardCommentUserVO> comment = this.cService.getList(bno);
 	
 		log.info("\t+ board:{}",board);
 		model.addAttribute("board",board);
 		model.addAttribute("file", fileVO);
-		model.addAttribute("boardCommentVO", vo);
+		model.addAttribute("comment", comment);
 	}//get
 	
 	//파일 다운로드
@@ -280,25 +275,23 @@ public class BoardController {
 	@GetMapping(
 			value="replies/pages/{bno}/{page}",
 			produces= {
-					MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE 
 			})
-	public ResponseEntity<List<BoardCommentVO>> getList(
-			@PathVariable("page") int page,
+	public ResponseEntity<List<BoardCommentUserVO>> getList(
 			@PathVariable("bno") int bno
 			){
-		log.debug("getList({},{}) invoked.",page,bno);
+		log.debug("getList({}) invoked.",bno);
+
 		 
-		Criteria cri = new Criteria();
-		 
-		return new ResponseEntity<>(this.cService.getList(cri, bno), HttpStatus.OK);
+		return new ResponseEntity<>(this.cService.getList(bno), HttpStatus.OK);
 	}//getList
 
 	//------- 상세조회 --------------------
 	@GetMapping(
 			value="replies/{bcno}",
 			produces= {
-					MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 			})
 	public ResponseEntity<BoardCommentVO> get(@PathVariable("bcno") Integer bcno){

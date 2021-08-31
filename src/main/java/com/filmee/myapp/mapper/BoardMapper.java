@@ -3,6 +3,7 @@ package com.filmee.myapp.mapper;
 import java.util.HashMap;
 import java.util.List;
 
+import com.filmee.myapp.domain.BoardUserVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.LiketoVO;
@@ -11,7 +12,7 @@ public interface BoardMapper {
 	
 	public abstract List<BoardVO> getList(Criteria cri); 	//메인 list 가져오기
 	
-	public abstract BoardVO select(Integer bno);			//상세조회
+	public abstract BoardUserVO select(Integer bno);			//상세조회
 	
 	public abstract int insertSelectKey(BoardVO board);		//작성
 	

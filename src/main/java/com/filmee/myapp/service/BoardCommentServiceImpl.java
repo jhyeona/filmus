@@ -6,6 +6,7 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.filmee.myapp.domain.BoardCommentUserVO;
 import com.filmee.myapp.domain.BoardCommentVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.mapper.BoardCommentMapper;
@@ -24,7 +25,7 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 	@Autowired private BoardMapper bmapper;
 
 	@Override
-	public List<BoardCommentVO> list(Integer bno) {
+	public List<BoardCommentUserVO> getList(Integer bno) {
 		log.debug(" >> list({}) invoked.", bno);
 		Objects.requireNonNull(this.mapper);
 		
@@ -67,13 +68,13 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 		return this.mapper.delete(bcno);
 	}//remove
 
-	@Override
-	public List<BoardCommentVO> getList(Criteria cri, Integer bno) {
-		log.debug(" >> getList({},{}) invoked.", cri,bno);
-		Objects.requireNonNull(this.mapper);
-		
-		return this.mapper.getListWithPaging(cri, bno);
-	}
+//	@Override
+//	public List<BoardCommentVO> getList(Criteria cri, Integer bno) {
+//		log.debug(" >> getList({},{}) invoked.", cri,bno);
+//		Objects.requireNonNull(this.mapper);
+//		
+//		return this.mapper.getListWithPaging(cri, bno);
+//	}
 
 
 }//end class

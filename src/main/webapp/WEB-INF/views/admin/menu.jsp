@@ -16,7 +16,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><a href="/admin/main">전체</a>></td>
+                        <td><a href="/admin/main">전체</a></td>
                     </tr>
                     <tr>
                         <td><a href="/admin/user">회원현황</a></td>

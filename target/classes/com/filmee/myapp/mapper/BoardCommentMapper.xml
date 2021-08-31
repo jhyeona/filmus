@@ -18,11 +18,12 @@
         ]]>
     </insert>
 
-    <select id="list" resultType="com.filmee.myapp.domain.BoardCommentVO">
+    <select id="list" resultType="com.filmee.myapp.domain.BoardCommentUserVO">
         <![CDATA[ 
-            SELECT /*+index_desc(fm_board_comment)*/*
-            FROM fm_board_comment
-            WHERE bno=#{bno}
+            SELECT /*+index_desc(fm_board_comment)*/C.*, u.user_id, u.nickname
+            FROM fm_board_comment C, fm_user u
+			WHERE C.writer=u.user_id
+            AND bno=#{bno}
         ]]>
     </select>
 
@@ -53,9 +54,10 @@
 
     <select id="getListWithPaging" resultType="com.filmee.myapp.domain.BoardCommentVO">
         <![CDATA[ 
-            SELECT /*+index_desc(fm_board_comment)*/*
-            FROM fm_board_comment
-            WHERE bno=#{bno}
+            SELECT /*+index_desc(fm_board_comment)*/C.*, u.user_id, u.nickname
+            FROM fm_board_comment C, fm_user u
+			WHERE C.writer=u.user_id
+            AND bno=#{bno}
         ]]>
     </select>
     

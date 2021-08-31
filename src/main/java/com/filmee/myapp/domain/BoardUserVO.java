@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class BoardVO {
+public class BoardUserVO {
 	//Board
 	private Integer bno;
 	private String category;
@@ -23,7 +23,7 @@ public class BoardVO {
 	private Integer commentCnt;
 	
 	//User
-//	private Integer user_id;
-//	private String nickname;
+	private Integer user_id;
+	private String nickname;
 	
 }

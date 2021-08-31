@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.filmee.myapp.domain.BoardUserVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.FileVO;
@@ -61,7 +62,7 @@ public class BoardServiceTests {
 	public void testGet() {
 		log.debug("testGetList() invoked.");
 		
-		BoardVO board = this.service.get(100);
+		BoardUserVO board = this.service.get(394);
 		
 		log.info("board:{}",board);
 	}//testGetList

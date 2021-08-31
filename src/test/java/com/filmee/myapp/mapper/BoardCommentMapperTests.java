@@ -37,6 +37,14 @@ public class BoardCommentMapperTests {
 		Objects.requireNonNull(this.mapper);
 	}//setup
 	
+	
+	@Test
+	public void testList() {
+		log.debug("testList() invoked.");
+		
+		this.mapper.list(396);
+	}
+	
 	@Test
 	public void testInsert() {
 		log.debug("testInsert() invoked.");
@@ -85,13 +93,13 @@ public class BoardCommentMapperTests {
 		this.mapper.read(11);
 	}//testRead
 
-	@Test
-	public void testGetListWithPaging() {
-		log.debug("testGetListWithPaging() invoked.");
-		Criteria cri = new Criteria();
-		List<BoardCommentVO> list = this.mapper.getListWithPaging(cri, 171);
-		
-		list.forEach(log::info);
-		
-	}//testGetListWithPaging
+//	@Test
+//	public void testGetListWithPaging() {
+//		log.debug("testGetListWithPaging() invoked.");
+//		Criteria cri = new Criteria();
+//		List<BoardCommentVO> list = this.mapper.getListWithPaging(cri, 171);
+//		
+//		list.forEach(log::info);
+//		
+//	}//testGetListWithPaging
 }//end class

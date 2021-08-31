@@ -2,13 +2,14 @@ package com.filmee.myapp.service;
 
 import java.util.List;
 
+import com.filmee.myapp.domain.BoardCommentUserVO;
 import com.filmee.myapp.domain.BoardCommentVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.BoardPageDTO;
 
 public interface BoardCommentService {
 	
-	public abstract List<BoardCommentVO> list(Integer bno);	//전체조회
+	public abstract List<BoardCommentUserVO> getList(Integer bno);	//전체조회
 	
 	public abstract BoardCommentVO get(Integer bcno);	//상세조회
 	
@@ -18,7 +19,7 @@ public interface BoardCommentService {
 	
 	public abstract int remove(Integer bcno);			//삭제
 	
-	public abstract List<BoardCommentVO> getList(Criteria cri, Integer bno);
+//	public abstract List<BoardCommentVO> getList(Criteria cri, Integer bno);
 	
 
 }//end interface
