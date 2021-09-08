@@ -1,6 +1,5 @@
 package com.filmee.myapp.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +43,7 @@ public class BoardServiceTests {
 		Criteria cri = new Criteria();
 		cri.setCurrPage(1);
 		cri.setAmount(20);
-		List<BoardVO> list = this.service.getList(cri);
+		List<BoardUserVO> list = this.service.getList(cri);
 		list.forEach(log::info);
 		list.clear();
 		list=null;

@@ -25,20 +25,35 @@
             	console.log(this)
                 console.log("listBtn Clicked");
 
-                alert("작성 중이던 글이 있습니다. 정말 취소하시겠습니까?");
-                location.href="/board/list?category=&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
+				if(confirm("작성 중이던 글이 있습니다. 정말 취소하시겠습니까?")){
+	                location.href="/board/list?category=&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"					
+				} else{
+					false;
+				}
             })//listbtn
            
         })//jq
+
+
         function fn_addtoBoard(){
-            
+            var title=$("#title")
+            var content=$("#content")
+            if(title==""){
+                console.log("title:",title)
+                alert("제목을 입력하세요.")
+                return false
+            } 
+            if(content==""){
+                alert("내용을 입력하세요.")
+                return false
+            }
             var form = document.getElementById("writeForm");
             
             form.action = "register";
-            form.submit();
+            // form.submit();
+            return true;
             
         }//fn_addtoBoard
-
     </script>
 
     
@@ -95,8 +110,8 @@
                 <input type="hidden" name="currPage" value="${cri.currPage}">
                 <input type="hidden" name="amount" value="${cri.amount}">
                 <input type="hidden" name="pagesPerPage" value="${cri.pagesPerPage}">
-                <input type="hidden" name="userid" value="${board.writer}">
-                <input type="hidden" name="writer" value="1">
+                <!-- <input type="hidden" name="userid" value="${__LOGIN__.userId}"> -->
+                <input type="hidden" name="writer" value="${__LOGIN__.userId}">
                 <input type="hidden" name="files">
            
 				<table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
@@ -117,10 +132,10 @@
                             </td>
                         </tr>
 						<tr>
-							<td><input type="text" class="form-control" placeholder="글 제목" name="title" maxlength="50"></td>
+							<td><input id="title" type="text" class="form-control" placeholder="글 제목" name="title" maxlength="50"></td>
 						</tr>
 						<tr>
-							<td><textarea class="form-control" placeholder="글 내용" name="content" maxlength="2048" style="height: 350px;"></textarea></td>
+							<td><textarea id="content"  class="form-control" placeholder="글 내용" name="content" maxlength="2048" style="height: 350px;"></textarea></td>
 						</tr>
                         <tr>
                               <td><input type="file" class="form-control" name="files" multiple></td>

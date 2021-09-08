@@ -20,7 +20,7 @@
             $("#listBtn").on('click',function(){
             	console.log(this)
                 console.log("listBtn Clicked");
-				if(confirm("작성 중이던 글이 있습니다. 정말 취소하시겠습니까?"){
+				if(confirm("작성 중이던 글이 있습니다. 정말 취소하시겠습니까?")){
 	                location.href="/board/list?category=&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"					
 				} else{
 					false;
@@ -117,7 +117,10 @@
                         </tr>
                         <tr>
                             <td><label for="writer">작성자</label></td>
-                            <td><input type="text"  class="form-control" name="writer" value="${board.writer}" readonly></td>
+                            <td>
+                                <input type="text" class="form-control" value="${board.nickname}">
+                                <input type="hidden"  class="form-control" name="writer" value="${board.writer}" readonly>
+                            </td>
                         </tr>
 
 					</tbody>

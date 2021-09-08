@@ -51,8 +51,8 @@ public class BoardCommentMapperTests {
 		
 		BoardCommentVO comment = new BoardCommentVO(
 				null, 
-				171, 
-				1, 
+				396, 
+				401, 
 				" 댓글 테스트클래스에서 왔습니디ㅏㅇ", 
 				null,
 				null, 

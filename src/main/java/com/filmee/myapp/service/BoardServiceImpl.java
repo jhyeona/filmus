@@ -1,6 +1,5 @@
 package com.filmee.myapp.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +10,6 @@ import com.filmee.myapp.domain.BoardUserVO;
 import com.filmee.myapp.domain.BoardVO;
 import com.filmee.myapp.domain.Criteria;
 import com.filmee.myapp.domain.FileVO;
-import com.filmee.myapp.domain.LiketoVO;
 import com.filmee.myapp.mapper.BoardMapper;
 import com.filmee.myapp.mapper.FileMapper;
 
@@ -26,11 +24,11 @@ public class BoardServiceImpl
 	implements BoardService {
 	
 	@Autowired private BoardMapper mapper;
-	@Autowired private FileMapper fmapper;
+	@Autowired private FileMapper fmapper; 
 
 
 	@Override
-	public List<BoardVO> getList(Criteria cri) {
+	public List<BoardUserVO> getList(Criteria cri) {
 		log.debug("getList({},{}) invoked.",cri);
 		Objects.requireNonNull(this.mapper);
 		
@@ -72,7 +70,7 @@ public class BoardServiceImpl
 	}//remove
  
 	@Override
-	public int getTotal(Criteria cri) {
+	public int getTotal(Criteria cri) { 
 		log.debug("getTotal({}) invoked.",cri);
 		Objects.requireNonNull(this.mapper);
 		Objects.requireNonNull(cri);
@@ -80,6 +78,8 @@ public class BoardServiceImpl
 		return this.mapper.getTotalCount(cri);
 	}//getTotal
 
+	//---- FILE ----//
+	
 	@Override
 	public int fileInsert(FileVO file) {
 		log.debug("fileInsert({}) invoked.",file);
@@ -97,8 +97,8 @@ public class BoardServiceImpl
 		FileVO list = this.fmapper.find(bno);
 		
 		return list;
-	}//fileDetail
-
+	}
 	
+
 
 }//end class

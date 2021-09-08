@@ -18,8 +18,6 @@ public interface BoardCommentService {
 	public abstract int modify(BoardCommentVO vo);		//수정
 	
 	public abstract int remove(Integer bcno);			//삭제
-	
-//	public abstract List<BoardCommentVO> getList(Criteria cri, Integer bno);
-	
+		
 
-}//end interface
+}//end interface 

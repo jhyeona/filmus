@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<beans 
-	xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
-		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
@@ -49,21 +54,6 @@
 		<constructor-arg ref="hikariConfig"/>
 		<!-- 매개변수가 필요한 생성자에 ref값을 인자로 전달함 -->
 	</bean>
-	
-	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
-	         <!-- 최대업로드 가능한 바이트크기 -->
-
-         <property name="maxUploadSize" value="52428800" />
-
-
-
-         <!-- 디스크에 임시 파일을 생성하기 전에 메모리에 보관할수있는 최대 바이트 크기 -->
-
-         <!-- property name="maxInMemorySize" value="52428800" / -->
-
-         <!-- defaultEncoding -->
-         <property name="defaultEncoding" value="utf-8" />
-	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="hikariDataSource"></property>
@@ -73,14 +63,53 @@
 			<!-- ** : 모든 하위폴더, *~ : 로 끝나는 모든 파일  -->
 	</bean>	
 
-	<mybatis-spring:scan base-package="com.filmee.myapp.mapper" />
-		<!-- 이걸 추가하면 해당 경로(히위패키지까지)의 인터페이스를 찾아 프록시 객체를 쉽게 받을 수 있다.
-			인터페이스의 추상 메서드 중 myBatis 어노테이션을(@Select, @iInsert 등..) 갖고 있거나
-			resource 폴더의 같은 FQCN으로 .xml을 갖고 있는 추상메서드를 수행시킬 수 있다.
-			==> SQL 문장이 있어야한다는 뜻!!! -->
+	
+	<context:component-scan base-package="com.filmee.myapp.service" />
+	<context:component-scan base-package="com.filmee.myapp.aop" />
+	<context:component-scan base-package="com.filmee.myapp.util" />
+	
 
-		<!-- 1. 해당 경로의 인터페이스는 myBatis-config에 <mapper class=FQCN을 추가하지 않아도 된다.
-			 2. MapperProxy 객체를 수동으로 받지 않아도 된다. -->
-			 	
+	
+	<mybatis-spring:scan base-package="com.filmee.myapp.mapper" />
+		
+		
+	<!-- ================ AOP proxy configuration ============= -->
+	<context:annotation-config />
+	<aop:aspectj-autoproxy />
+
+	
+	<!-- ============ Spring Transaction Configuration ========= -->
+	<bean
+		id = "transactionManager"
+		class = "org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="hikariDataSource" />
+	</bean>
+	
+	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+           
+         <property name="maxUploadSize" value="52428800" />
+
+
+
+                 <property name="defaultEncoding" value="utf-8" />
+   </bean>
+		
+	<tx:annotation-driven />		
+
+	<!-- Mail sender -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="shawnshhan@gmail.com"/>
+        <property name="password" value="forTest999" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
 
 </beans>

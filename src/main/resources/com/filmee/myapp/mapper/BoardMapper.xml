@@ -8,10 +8,11 @@
 
 <mapper namespace="com.filmee.myapp.mapper.BoardMapper">
 
-    <select id="getList" resultType="com.filmee.myapp.domain.BoardVO">
+    <select id="getList" resultType="com.filmee.myapp.domain.BoardUserVO">
 
-        SELECT /*+index_desc(fm_board)*/*
-        FROM fm_board
+        SELECT b.*, u.user_id, u.nickname
+		FROM fm_board b 
+		INNER JOIN fm_user u ON( b.writer=u.user_id)
         <where>
             <choose>
                 <when test="type eq 'T'.toString()">
@@ -23,7 +24,7 @@
                 </when>
 
                 <when test="type eq 'W'.toString()">
-                    writer LIKE '%'||#{keyword}||'%'
+                    u.nickname LIKE '%'||#{keyword}||'%'
                 </when>
                 
                 <when test="category eq 'F'.toString()">
@@ -44,6 +45,7 @@
 					
               </choose>
         </where>
+  		ORDER BY b.bno DESC      
         OFFSET (#{currPage}-1) * #{amount} ROW
         FETCH NEXT #{amount} ROWS ONLY
 
@@ -52,7 +54,7 @@
     <select id="select" resultType="com.filmee.myapp.domain.BoardUserVO">
       <![CDATA[ 
         SELECT b.*, u.user_id, u.nickname
-        FROM fm_board b, fm_user u
+        FROM fm_board b, fm_user u 
         WHERE b.writer=u.user_id
         AND bno=#{bno}
       ]]>
@@ -90,6 +92,18 @@
 
         <where>
           <choose>  
+          	<when test="type eq 'T'.toString()">
+                AND title LIKE '%'||#{keyword}||'%'
+            </when>
+
+            <when test="type eq 'C'.toString()">
+                AND content LIKE '%'||#{keyword}||'%'
+            </when>
+
+            <when test="type eq 'W'.toString()">
+                AND writer LIKE '%'||#{keyword}||'%'
+            </when>
+            
             <when test="category eq 'F'.toString()">
               category='F'
             </when>
@@ -125,4 +139,10 @@
       WHERE bno=#{bno}
     </update>
 
+    <update id="heartCnt" parameterType="int">
+      UPDATE fm_board 
+      SET like_cnt = like_cnt + #{amount}
+      WHERE bno=#{bno}
+    </update>
+    
 </mapper>

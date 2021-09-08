@@ -3,10 +3,10 @@
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+ 
 
 <!DOCTYPE html>
- 
+  
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -18,44 +18,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js"></script>
     <script src="/resources/js/reply.js"></script>
+    <script src="/resources/js/like.js"></script>
 
-    
-    <script>
-   
-    </script>
-    <script>
-
-    
+    <script>    
     	$(function(){
+
             console.log("========= COMMENT JS =======")
     		var bnoValue='<c:out value="${board.bno}"/>';
-            var nickname='<c:out value="${board.nickname}"/>'
-            var replyUL=$(".chat");            
+            var nickname='<c:out value="${__LOGIN__.nickname}"/>' 
+            var userid='<c:out value="${__LOGIN__.userId}"/>'
+            var replyUL=$(".chat");    
+            var boardwriter='<c:out value="${board.writer}"/>'
 
-            showList(1);
-            function showList(page){
-                console.log("showList !")
-                replyService.getList({bno:bnoValue,page:page||1},function(list){
-                    if(page== -1){
-                        pageNum=Math.ceil(replyCnt/10.0);
-                        showList(pageNum);
-                        return;
-                    }
-                    var str="";
-                    if(list==null||list.length==0){
-                        return;
-                    }//if
-                    for(var i=0, len=list.length||0; i<len; i++){
-                        str+="<li class='left clearfix' data-bcno='"+list[i].bcno+"'>";
-                        str+="  <div><div class='header'><strong class='primary-font'>["+list[i].nickname+"]</strong>";
-                        str+="      <samll class='pull-right text-muted' id='commentTs'>작성 "+replyService.displayTime(list[i].insert_ts)+" <c:if test='"+list[i].update_ts+"'><br>수정 "+replyService.displayTime(list[i].update_ts)+"</c:if>"+"</small></div>";
-                        str+="      <p>"+list[i].content+"</p></div></li><hr>";
-                    }
-                    replyUL.html(str);
-                })//end function
-            }//showList
-
-            var modal = $(".modal");
+            var modal = $(".modal"); 
 
             var modalInputReply=modal.find("input[name='content']");
             var modalInputReplyer=modal.find("input[name='nickname']");
@@ -65,23 +40,92 @@
             var modalRemoveBtn=$("#modalRemoveBtn");
             var modalRegisterBtn=$("#modalRegisterBtn");
 
+            var likecheck="${heart.likecheck}"
+
+            console.log("nick:",nickname)
+            console.log("userid:",userid);
+            console.log("writer:",boardwriter);
+
+            if("${__LOGIN__.userId}"==boardwriter){
+                $("#delete").show();
+                $("#modifyBtn").show();
+            } else{
+                $("#delete").hide();
+                $("#modifyBtn").hide();
+                if("${__LOGIN__}"==""){
+                    $("#addReplyBtn").hide()
+                    $("#reportBtn").hide()
+                }//if
+            }//if-else
+
+
+            console.log(">>>> LIKECHECK >>>> ",likecheck); 
+            if(likecheck==1){
+                $("#likeimg").attr("src", "/resources/img/fullheart.png");
+                $("#likeBtn").on("click",function(e){
+                    likeService.unLike(bnoValue, userid);
+                    alert("좋아요를 취소했습니다.");
+                    $("#likeimg").attr("src", "/resources/img/emptyheart.png");
+                    location.href="/board/get?bno=${board.bno}&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
+                })
+            }
+            if(likecheck==0){
+                $("#likeimg").attr("src", "/resources/img/emptyheart.png");
+                $("#likeBtn").on("click",function(e){
+                    likeService.likeIt(bnoValue, userid);
+                    alert("좋아요를 눌렀습니다.");
+                    $("#likeimg").attr("src", "/resources/img/fullheart.png");
+                    location.href="/board/get?bno=${board.bno}&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
+                })
+            }
+
+            showList(1);
+            function showList(page){
+                console.log("showList ! : nick:",nickname)
+                replyService.getList({bno:bnoValue,page:page||1},function(list){
+                    if(page== -1){
+                        pageNum=Math.ceil(replyCnt/10.0);
+                        showList(pageNum);
+                        return;
+                    }
+                    var str="";
+                    if(list==null||list.length==0){
+                        str+="<div>아직 댓글이 없습니다.</div>"
+                        // return;
+                    }//if
+                    for(var i=0, len=list.length||0; i<len; i++){
+                        str+="<li class='left clearfix' data-bcno='"+list[i].bcno+"'>";
+                        str+="  <div>";
+                        str+="       <div class='header'><a href='/mypage/main'><img class='rounded-circle' src='/resources/img/common.jpg' width='30px' height='30px'></a>";
+                        str+="            <strong class='primary-font'>"+list[i].nickname+"</strong>";
+                        str+="            <samll class='pull-right text-muted' id='commentTs'>등록 "+replyService.displayTime(list[i].insert_ts)+" <c:if test='"+list[i].update_ts+"'><br>수정 "+replyService.displayTime(list[i].update_ts)+"</c:if>"+"</small>";
+                        str+="             </div>"
+                        str+="            <p id='replycontent'>"+list[i].content+"</p></div></li><li><div><button type='button' id='report'> <img src='/resources/img/siren.jpg' width='20px' height='20px'>신고</button></div></li><hr>";
+                    }
+
+                    replyUL.html(str);
+                })//end function
+            }//showList
+            
+
+
             $("#addReplyBtn").on("click",function(e){
                 console.log("addReplyBtn")
                 modal.find("input").val("");
                 modalinputReplyDate.closest("div").hide();
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
-                $(".modal").modal("show");
+                replyComment.readOnly=false;
+                $("#createComment").modal("show");
             })//onclick addReplyBtn
-
             modalRegisterBtn.on("click",function(e){
                 var reply={
                     content:modalInputReply.val(),
                     bno:bnoValue,
-                    writer:1
+                    writer:"${__LOGIN__.userId}"
                 };
                 replyService.add(reply,function(result){
-                    alert(result);
+                    alert(result); 
 
                     modal.find("input").val("");
                     modal.modal("hide");
@@ -89,11 +133,14 @@
                 })
             })//modalRegisterBtn
 
+
+            $(".chat").css('cursor','pointer')
+
             $(".chat").on("click","li",function(e){
                 console.log(" >> chat clicked.");
                 bcno=$(this).data("bcno");
                 console.log(".chat bcno:"+bcno);
-               
+
                 replyService.get(bcno, function(reply){
                     console.log(reply);
                     modalInputReply.val(reply.content);
@@ -102,12 +149,20 @@
                     modal.data("bcno",reply.bcno);
 
                     modal.find("button[id!='modalCloseBtn']");
-                    modalModBtn.show();
+
+                    if("${__LOGIN__.userId}"==reply.writer){
+                        modalModBtn.show();
+                        modalRemoveBtn.show();
+                        replyComment.readOnly=false;
+                    }else{
+                        replyComment.readOnly=true;
+                        modalModBtn.hide();
+                        modalRemoveBtn.hide();
+                    }
                     modalRegisterBtn.hide();
-                    $(".modal").modal("show");
+                    $("#createComment").modal("show");
                 })
             })
-
 
             modalModBtn.on("click",function(e){
                 console.log("modalModBtn Clicked");
@@ -131,9 +186,14 @@
 					showList(1);
 				})
 			})
+
+            $("#report").on("click",function(e){
+                $("#reportmodal").modal("show");
+
+            })
     	})//jq
 
-        
+
 
         $(function(){
             console.debug('>>> jq started.');
@@ -203,26 +263,26 @@
             margin-top: 40px;
             margin-right: 20px;
         }
-        #count>ul>li{
-            float:right;
-            font-size: 20px;
-        }
         #title{
             width: 50%;
             height: 40px;
-            font-size: 20px;
+            font-size: 26px;
             padding: 10px;
             margin-bottom: 20px;
-            background-color: #fcfcfc96; 
+            background-color: #fcfcfc00; 
             border-radius: 30px;
         }
         #content{
             width: 100%;
             height: 100%;
-            font-size: 15px;
+            font-size: 19px;
             padding: 20px;
-            background-color: #fcfcfc96; 
+            background-color: #ffffff00; 
             border-radius: 30px;
+        }
+        #replycontent{
+            width: 80%;
+            margin-left: 30px;
         }
 
         button {
@@ -245,20 +305,20 @@
             cursor: pointer;
             transition: 0.5s;
         }
-        #threeBtn{
+        #threeBtn, #reportBtn{
             float: right;
         }
-
         #emptyheart{
             width: 20px;
             height: 20px;
         }
 
         table {
-			width:100%;
+			width:100px;
 		    text-align: center;
-		    margin: 20px ;
-		    font-size: 20px;
+		    margin-top: 10px ;
+            float: right;
+		    font-size: 30px;
             font-family: 'ELAND 초이스';
   			border-collapse: collapse;
 		  }
@@ -266,14 +326,12 @@
 		  	color: black;
 		  	font-size:15px;
 		  	padding: 10px;
-  			border-bottom: 1px solid #ddd;	
   		  }
 		  th{
 		  	font-weight: bold;
 		  	border:10px;
 		  	margin:10px;
 		  	padding:15px;
-  			border-bottom: 1px solid #ddd;
   		  }
         #commentList{
             display: inline-block;
@@ -283,6 +341,9 @@
             display: inline-block;
             float: right;
             font-size: 16px;
+        }
+        #report{
+            float: right;
         }
     </style>
 
@@ -305,9 +366,9 @@
             <input type="hidden" name="pagesPerPage" value="${cri.pagesPerPage}">
             <input type="hidden" name="bno" value="${board.bno}">
             <input type="hidden" name="fname" value="${file.fname}">
-            <input type="hidden" name="writer" value="${board.writer}">
+            <input type="hidden" name="userId" value="${__LOGIN__.userId}">
 
-            <div>
+            <div id="boardinfo">
                 <form action="/mypage/main">
                     <ul id="userinfo">
                         <li>
@@ -319,32 +380,34 @@
                         <li>작성일 <fmt:formatDate pattern="yyyy/MM/dd" value="${board.insert_ts}"/></li>
                         <c:if test="${board.update_ts!=null}">
                         	<li>수정일 <fmt:formatDate pattern="yyyy/MM/dd" value="${board.update_ts}"/></li>
-                    	</c:if>  
+                    	</c:if> 
                     </ul>
                 </form>
             </div>
             
+            <!-- 신고  /  조회수  /  좋아요 -->
             <div id="count">
-                <ul>
-                    <li><button type="button">신고</li>
-                    <!-- <li><button type="button"><img id="emptyheart" src="/resources/img/emptyheart.png">${board.like_cnt}</li> -->
-                    <li>조회수 ${board.view_cnt}</li>
-                </ul>
-            </div>
+                <table>
+                    <tr>
+                        <td><button id="reportBtn"><img src='/resources/img/siren.jpg' width='25px' height='25px'></button></td>
+                        <td><img src="/resources/img/eye-removebg-preview.png" alt="view" width='30px' height='30px'> </td>
+                        <td>
+                            <c:if test="${__LOGIN__==null}">
+                                <img src="/resources/img/emptyheart.png" alt="좋아요" width="30px" height="30px">
+                            </c:if>
+                            <c:if test="${__LOGIN__.userId != null}">
+                                <button id="likeBtn"><img id="likeimg" src="/resources/img/emptyheart.png" alt="좋아요" width="30px" height="30px"></button>
+                            </c:if>
 
-            <input type="hidden" id='bno' name="bno" value=''>
-            <input type="hidden" id='user_id' name="user_id" value='1'>
-            <!--  좋아요  -->
-            <div class="div1">
-                <div class="div2">
-                    <div class="div3">
-                            <a href="#" onclick="like_func();"><img id="emptyheart" src='/resources/img/emptyheart.png' id='like_img'></a>
-                        <br><span id='like_cnt' style='margin-left: 5px;'></span> Likes
-                    </div>
-                </div>
-                
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td> ${board.view_cnt}</td>
+                        <td> ${board.like_cnt}</td>
+                    </tr>
+                </table>
             </div>
-
             <div>
                 <p id="title">
                     [<c:choose>
@@ -354,8 +417,9 @@
                        <c:when test="${board.category=='R'}">추천</c:when>
                      </c:choose>] ${board.title}
                 </p>
+
             </div>
-			<hr>
+            <hr>
             <div id="content">
             	<p>
 	               &nbsp;${board.content}
@@ -367,7 +431,6 @@
                 <button type="button" id="delete" class="btn btn-outline-dark">삭제</button>
                 <button type="button" id="listBtn" class="btn btn-outline-dark">목록</button>
             </div>
-
             <div>
             	<c:if test="${file.fname!=null}">
 	            	<p>&nbsp</p>
@@ -404,8 +467,8 @@
                 </div>
             </div>
 
-              <!-- Modal -->
-              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- Modal -->
+            <div class="modal fade" id="createComment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -415,14 +478,15 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="content">내용</label>
-                            <input class="form-control" name='content' value='content'>
+                            <input id="replyComment" class="form-control" name='content' value='content'>
                         </div>      
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name='writer'>
+                            <input type="hidden" class="form-control" name='writer' >
                         </div>
                         <div class="form-group">
                             <input class="form-control" name='insert_ts' value='2018-01-01 13:13'>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                       <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
@@ -434,6 +498,36 @@
                 </div>
               </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="reportmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">신고하기</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="reportcontent">내용</label>
+                            <input id="reportcontent" class="form-control" name='reportcontent' value=''>
+                        </div>      
+                        <div class="form-group">
+                            신고자 <input type="text" class="form-control" name='reportwriter' value="${__LOGIN__.userId}" readonly>
+                        </div>
+                        <div class="form-group">
+                            신고일시<input class="form-control" name='insert_ts' value='2018-01-01 13:13' readonly>
+                        </div>
+                        <div class="form-group">
+                            신고대상<input type="hidden" class="form-control" name="reporttarget" value="Board_${board.bno}" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                      <button id='modalRegisterBtn' type="button" class="btn btn-primary" data-bs-dismiss="modal">완료</button>
+                    </div> 
+                  </div>
+                </div>
+            </div>
 
 		</form>
     </div>

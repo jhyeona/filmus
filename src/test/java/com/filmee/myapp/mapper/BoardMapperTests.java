@@ -38,7 +38,7 @@ public class BoardMapperTests {
 	public void testGetList() {
 		log.debug("testGetList() invoked.");
 		Criteria cri = new Criteria();
-		List<BoardVO> board = this.mapper.getList(cri);
+		List<BoardUserVO> board = this.mapper.getList(cri);
 		board.forEach(log::info);
 	}//testGetList 
 	

@@ -45,6 +45,10 @@
 
                 paginationForm.submit();
             }); //onclick
+
+            if("${__LOGIN__}"==""){
+                $("#regBtn").hide();
+            }
         }); //jq
     </script>
 
@@ -134,12 +138,13 @@
         .board_search_box{
             width: 100px;
             height: 25px; 
+            font-size: 14px;
             line-height : normal; 
             padding: 0.3em 0.4em;
             margin: 0;
-             border: none;
-             border-radius: 4px;
-             outline-style: none; 
+            border: none;
+            border-radius: 4px;
+            outline-style: none; 
             -webkit-appearance: none;
             -moz-appearance: none; 
             appearance: none;
@@ -201,6 +206,8 @@
                     <input type="hidden" name="keyword">
                     <input type="hidden" name="category">
                     <input type="hidden" name="bno" value="${board.bno}">
+                    <input type="hidden" name="writer" value="${board.writer}">
+
                     <hr>
                     <ul>
                         <li><a href="/board/list?&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">ALL</a></li>
@@ -220,13 +227,13 @@
                             <input type="hidden" name="currPage" value="1">
                             <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
                             <input type="hidden" name="pagesPerPage" value="${pageMaker.cri.pagesPerPage}">
-                            
+                             
                             <select name="type" class="form-select">
                                 <option value="T" ${("T" eq pageMaker.cri.type) ? "selected":""}>제목</option>
                                 <option value="C" ${("C" eq pageMaker.cri.type) ? "selected":""}>내용</option>
                                 <option value="W" ${("W" eq pageMaker.cri.type) ? "selected":""}>작성자</option>
                             </select>
-                        <input type="text" name="keyword" class="board_search_box" value="${pageMaker.cri.keyword}">
+                        <input type="text" name="keyword" class="board_search_box" value="${pageMaker.cri.keyword}" placeholder="SEARCH">
                         <button class="btn btn-info" ><img id="searchimg" src="/resources/img/search.png" ></button>
                         </form>
                     </li>
@@ -258,7 +265,7 @@
                             </c:choose>
                         </td>
                         <td>${board.bno}</td>
-                        <td>${board.writer}</td>
+                        <td>${board.nickname}</td>
                         <td><a href="/board/get?bno=${board.bno}&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">${board.title} </a> [<c:out value="${board.commentCnt}"/>]</td>
                         <td><fmt:formatDate pattern="yyyy/MM/dd" value="${board.insert_ts}"/></td>
                         <td>${board.like_cnt}</td>

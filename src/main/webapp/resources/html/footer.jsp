@@ -1,15 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>    
+    
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
     <link rel="stylesheet" href="/resources/css/footer.css">
 
+
 </head>
 <body>
     <footer>
         <div id="footer">
+
             <a href="/main">
                 <img id="logoimg" src="/resources/img/filmeeLogo.png" alt="LOGO">
             </a>
@@ -20,9 +27,11 @@
                     abcedferasdavazsdfzsdf
                 </p>
             </div>
+            
             <div id="bugreport">
-                <button>의견보내기</button>
+                <button id="compl">의견보내기</button>
             </div>
+                                          
         </div>
     </footer>  
 </body>
