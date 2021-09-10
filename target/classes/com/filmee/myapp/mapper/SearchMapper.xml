@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.filmee.myapp.mapper.SearchMapper">
+
+	<select id='getFilmList' resultType='com.filmee.myapp.domain.SearchFilmVO'>
+		<![CDATA[			
+			SELECT film_id filmid, original_title title, poster_path poster
+			FROM fm_film
+		]]>
+		<where>
+			<choose>
+				<when test="filmTitle.equals('')">
+					<![CDATA[
+						original_title = '결과없어'
+					]]>
+				</when>				
+
+				<when test="!filmTitle.equals('')">
+					<![CDATA[
+						REPLACE(LOWER(original_title), ' ', '') LIKE '%'||REPLACE(LOWER(#{filmTitle}), ' ', '')||'%'
+						OR REPLACE(LOWER(title), ' ', '') LIKE '%'||REPLACE(LOWER(#{filmTitle}), ' ', '')||'%'
+					]]>
+				</when>
+			</choose>
+		</where>
+		<![CDATA[	
+			ORDER BY popularity DESC
+			OFFSET 0 ROWS
+			FETCH NEXT 5 ROWS ONLY
+		]]>
+	</select>
+
+</mapper>
