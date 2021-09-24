@@ -134,11 +134,14 @@
       where bno=#{bno}
     </update>
 
-    <update id="commentCnt" parameterType="int">
-      UPDATE fm_board 
-      SET comment_cnt = comment_cnt + #{amount}
-      WHERE bno=#{bno}
-    </update>
+    
+    <select id="commentCnt" resultType="int">
+        <![CDATA[ 
+            SELECT COUNT(*)
+            FROM fm_board_comment
+            WHERE bno=#{bno}
+        ]]>
+    </select>
 
     <update id="heartCnt" parameterType="int">
       UPDATE fm_board 
