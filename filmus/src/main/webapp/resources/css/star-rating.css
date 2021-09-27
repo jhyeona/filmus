@@ -1,0 +1,59 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css);
+.rating-wrap {
+    /* max-width: 300px; */
+    margin: 0;
+    padding: 0px;
+    text-align: center;
+}
+
+.center {
+    width: 130px;
+    margin: auto;
+}
+
+#rating-value {
+    font-size: 17px;
+}
+
+.rating {
+    border: none;
+    float: left;
+}
+
+.rating > input {
+    display: none;
+}
+
+.rating > label:before {
+    content: '\f005';
+
+    font-family: FontAwesome;
+    font-size: 20px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.rating > .half:before {
+    content: '\f089';
+    position: absolute;
+    cursor: pointer;
+}
+
+.rating > label {
+    color: gray;
+    float: right;
+    cursor: pointer;
+}
+
+.rating > input:checked ~ label,
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+    color: pink;    
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label,
+.rating > input:checked ~ label:hover ~ label {
+    color: pink;
+}

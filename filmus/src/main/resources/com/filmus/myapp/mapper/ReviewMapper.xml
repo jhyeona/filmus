@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.filmus.myapp.mapper.ReviewMapper">
+
+    <select id="reviewDetail" resultType="com.filmus.myapp.domain.ReviewVO">
+        <![CDATA[ 
+            SELECT r.*, f.title, f.poster_path, u.nickname, u.profile_Photo_path
+            FROM fm_review R INNER JOIN fm_film F
+            ON (R.film_id=F.film_id)
+            INNER JOIN fm_user u
+            ON (R.writer=u.user_id)
+            WHERE r.rno=#{rno}
+            AND r.film_id=#{filmId}
+        ]]>
+    </select>
+
+    <update id="modify">
+        <![CDATA[ 
+            UPDATE fm_review
+            SET content=#{content}, rate=#{rate}, update_ts=current_date
+            WHERE rno=#{rno}
+        ]]>
+    </update>
+
+    <update id="delete">
+        <![CDATA[ 
+            UPDATE fm_review
+            SET delete_ts=current_date
+            WHERE rno=#{rno}
+            AND film_id=#{filmId}
+        ]]>
+    </update>
+    
+    <insert id="rcCreate">
+        <![CDATA[ 
+            INSERT INTO fm_review_comment(rno, writer,content,insert_ts)
+            VALUES(#{rno},#{writer},#{content},current_date)
+        ]]>
+    </insert>
+
+    <insert id="rcChildCreate">
+        <![CDATA[ 
+            INSERT INTO fm_review_comment(rno, writer,content,insert_ts,parent_rcno)
+            VALUES(#{rno},#{writer},#{content},current_date,#{parentRcno})
+        ]]>
+    </insert>
+
+    <update id="rcModify">
+        <![CDATA[ 
+            UPDATE fm_review_comment
+            SET content=#{content}, update_ts=current_date
+            WHERE rcno=#{rcno}
+        ]]>
+    </update>
+
+    <update id="rcDelete">
+        <![CDATA[ 
+            UPDATE fm_review_comment
+            SET delete_ts=current_date
+            WHERE rcno=#{rcno}
+            AND rno=#{rno}
+        ]]>
+    </update>
+
+    <select id="rcList" resultType="com.filmus.myapp.domain.ReviewCommentVO">
+        <![CDATA[ 
+            SELECT rc.*, u.nickname, u.profile_photo_path
+            FROM fm_review_comment rc INNER JOIN fm_user u
+            ON rc.writer=u.user_id
+            WHERE rno=#{rno}
+            ORDER BY rc.insert_ts DESC
+        ]]>
+    </select>
+    
+    <update id="commentCnt">
+        <![CDATA[ 
+            UPDATE fm_review
+			SET comment_cnt=comment_cnt+#{amount}
+			WHERE rno=#{rno}
+        ]]>
+    </update>
+
+    <insert id="reviewLike">
+        <![CDATA[ 
+            INSERT INTO fm_review_liked
+            VALUES(#{rno}, #{userId}, current_date, 1)
+        ]]>
+    </insert>
+
+    <delete id="reviewUnLike">
+        <![CDATA[ 
+            DELETE FROM fm_review_liked
+            WHERE rno=#{rno}
+            AND user_id=#{userId}
+        ]]>
+    </delete>
+    
+    <update id="reviewLikeCnt">
+        <![CDATA[ 
+            UPDATE fm_review
+			SET like_cnt=like_cnt+#{amount}
+			WHERE rno=#{rno}
+        ]]>
+    </update>    
+    
+
+    <select id="reviewLikeCheck" resultType="int">
+        <![CDATA[ 
+            SELECT count(*)
+            FROM fm_review_liked
+            WHERE rno=#{rno}
+            AND user_id=#{userId}
+        ]]>
+    </select>
+
+</mapper>

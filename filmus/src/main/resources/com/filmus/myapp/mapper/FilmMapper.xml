@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.filmus.myapp.mapper.FilmMapper">
+	
+	<select id='getFilmDetail' resultType='com.filmus.myapp.domain.FilmDetailVO'>		
+		SELECT f.film_id, f.original_title, to_char(f.release_date, 'yyyy'), f.plot, f.poster_path, f.backdrop_path, NVL(r.avgRate, 0), NVL(r.width, 0)
+		FROM fm_film f
+		LEFT OUTER JOIN (SELECT film_id, ROUND( AVG(rate), 2 ) AS avgRate, ROUND( AVG(rate), 2 )*20 AS width
+		                 FROM fm_review	
+		                 GROUP BY film_id) r
+		             ON f.film_id=r.film_id
+		WHERE f.film_id=#{filmId}
+	</select>
+	
+	<select id='getFilmPeople' resultType='com.filmus.myapp.domain.FilmPeopleVO'>
+		SELECT fp.people_id, fp.credit_order, p.enname
+		FROM fm_film_people fp
+		INNER JOIN fm_people p
+				ON fp.people_id = p.people_id
+		WHERE fp.film_id=#{filmId}
+		ORDER BY fp.credit_order
+	</select>
+	
+	<select id="getReviews" resultType="com.filmus.myapp.domain.FilmReviewVO">
+		SELECT	/*+ index_desc(fm_review_pk) */
+				r.rno, r.writer, r.rate, r.rate*20 AS width, r.content, r.insert_ts, r.update_ts, r.like_cnt, r.comment_cnt, u.nickname, u.profile_photo_path
+		FROM fm_review r
+		INNER JOIN fm_user u
+				ON r.writer = u.user_id
+		WHERE film_id=#{filmId}
+		OFFSET ( #{currPage} - 1) * #{amount} ROWS
+        FETCH NEXT #{amount} ROWS ONLY
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+	<![CDATA[
+		SELECT count(rno)
+		FROM fm_review r
+		INNER JOIN fm_film f
+				ON r.film_id=f.film_id
+		WHERE r.film_id=#{filmId}
+		  AND rno > 0
+		]]>
+		<!-- <choose>
+			<when test="category eq 'T' .toString()">
+			</when>
+			<when test="category eq 'A' .toString()">
+					AND delete_ts IS NULL
+					<![CDATA[AND (sus_to IS NULL OR sus_to < current_date)]]>
+				</when>
+				<when test="category eq 'D' .toString()">
+					AND delete_ts IS NOT NULL					
+				</when>
+				<when test="category eq 'S' .toString()">
+					AND delete_ts IS NULL
+					<![CDATA[AND sus_to >= current_date]]>
+				</when>
+		</choose> -->
+	
+	</select>
+	
+	
+	<insert id="insertReview">
+		INSERT INTO fm_review(film_id, writer, rate, content)
+		VALUES (#{filmId}, #{writer}, #{rating}, #{content})
+	</insert>
+	
+	<select id="getFilmReactionOfUser" resultType="int">
+		SELECT code
+		FROM fm_film_reaction
+		WHERE film_id = #{filmId}
+  		  AND user_id = #{userId}
+	</select>
+	
+	<select id="getFilmReactionOfThis" resultType="com.filmus.myapp.domain.FilmInfoReactionVO">
+		SELECT COUNT(CASE WHEN code=1 THEN 1 END),
+		       COUNT(CASE WHEN code=2 THEN 1 END),
+		       COUNT(CASE WHEN code=3 THEN 1 END)
+		FROM fm_film_reaction
+		WHERE film_id = #{filmId}
+	</select>
+	
+	<insert id="InsertFilmReactionOfUser">
+		INSERT INTO fm_film_reaction(user_id, film_id, code)
+		VALUES (#{userId}, #{filmId}, #{code})
+	</insert>
+	
+	<delete id="DeleteFilmReactionOfUser">
+		DELETE FROM fm_film_reaction
+		WHERE user_id=#{userId}
+		  AND film_id=#{filmId}
+		  AND code=#{code}
+	</delete>
+	
+	
+	
+
+</mapper>
