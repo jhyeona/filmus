@@ -1,11 +1,6 @@
 
 # FILMUS Project
 
-## ■ Info
-
-- #### 프로젝트 포트폴리오 [**보기**](https://drive.google.com/file/d/1QAr3PWZCvtJrCjO4w1c-YCoZBGkzroZL/view?usp=sharing)
-- #### 서비스 [**바로가기**](http://filmus.site/)
-
 ___
 
 ## ■ About Project
